@@ -1,26 +1,26 @@
 package com.quamtech.startupinvestissement.Entity;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
-
 import org.springframework.data.annotation.Id;
 
+
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder    
 
-public class Transaction {
+public class Startup {
     @Id
     private String id;
-    private LocalDate date;
-    private BigDecimal prix;
+    private String nomStartup;
+    private String montantCote;
     private String action;
-    private String idStartup;
-    private String idIvestisseur;
+    private String adresse;
+    private String email;
+    private Integer tel;
+    private String fonction;
+
 }
-
-

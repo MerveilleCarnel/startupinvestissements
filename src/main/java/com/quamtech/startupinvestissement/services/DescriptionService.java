@@ -1,13 +1,16 @@
 package com.quamtech.startupinvestissement.services;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import java.util.List;
+
+
 import org.springframework.stereotype.Service;
 
 import com.quamtech.startupinvestissement.Entity.Description;
-import com.quamtech.startupinvestissement.enumeration.SecteurActivite;
+
+import com.quamtech.startupinvestissement.exception.DescriptionNotFoundException;
 import com.quamtech.startupinvestissement.exception.IllegalArgumentException;
 import com.quamtech.startupinvestissement.payloads.in.CreerDescriptionpayload;
+import com.quamtech.startupinvestissement.payloads.in.UpadateDescriptionPayload;
 import com.quamtech.startupinvestissement.repositories.DescriptionRepository;
 
 import lombok.AllArgsConstructor;
@@ -18,11 +21,11 @@ public class DescriptionService {
     private final DescriptionRepository descriptionRepository;
 
      public  Description creerDescription(CreerDescriptionpayload creerDescriptionpayload) throws IllegalArgumentException{
-        creerDescriptionpayload.validate();
+
     Description ro= Description.builder()
     .presentation(creerDescriptionpayload.getPresentation())
-    .secteurActivite(SecteurActivite.valueOf(creerDescriptionpayload.getSecteurActivite()))
-    .build();
+    .secteurActivite(creerDescriptionpayload.getSecteurActivite())
+    .build(); 
     return descriptionRepository.save(ro);
 
     }
@@ -31,12 +34,36 @@ public class DescriptionService {
         return descriptionRepository.findById(id).get();
     }
 
-    public Page<Description> getAllDescription(Pageable pageable){
-        return descriptionRepository.findAll(pageable);
+    public List<Description> getAllDescription(){
+        return descriptionRepository.findAll();
     }
     
-    public Page<Description>rechercherParSecteurActivite(SecteurActivite secteurActivite, Pageable pageable){
-        return descriptionRepository.findAllBySecteurActivite(secteurActivite, pageable);    
+    public List<Description>rechercherParSecteurActivite(){
+        return descriptionRepository.findAll();    
     }
+    public boolean isDescriptionExistById(String id){
+
+        return descriptionRepository.existsById(id);
+    }
+
+
+
+ public Description updateDescription(UpadateDescriptionPayload upadateDescriptionpayload) throws DescriptionNotFoundException{ 
+        if(isDescriptionExistById(upadateDescriptionpayload.getIdDescription())){
+        Description d= descriptionRepository.findById(upadateDescriptionpayload.getIdDescription()).get();
+        d.setPresentation(upadateDescriptionpayload.getPresentation());
+        d.setSecteurActivite(upadateDescriptionpayload.getSecteurActivite());
+        d = descriptionRepository.save(d);
+        return d;
+        }
+        else {
+            throw new DescriptionNotFoundException("Aucune description ne correspond à cet id");
+        }
+}
+
+    public void removeDescriptionById (String id){
+      descriptionRepository.deleteById(id);
+    }
+
 
 }

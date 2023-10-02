@@ -13,9 +13,9 @@ import com.quamtech.startupinvestissement.Entity.Action;
 
 
 
-public interface ActionRepository extends MongoRepository<Action, String>{ 
+public interface ActionRepository extends MongoRepository<Action, String> { 
 
-    public Optional<Action>findById(String id);
+    
     public Optional <Action> findByNomStartup(String nomStartup);
     public Page<Action>findAllByNomStartup(String nomStartup, Pageable pageable);
     public Page<Action>findAll(Pageable pageable);

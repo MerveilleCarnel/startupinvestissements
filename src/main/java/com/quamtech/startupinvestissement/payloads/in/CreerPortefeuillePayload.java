@@ -1,6 +1,10 @@
 package com.quamtech.startupinvestissement.payloads.in;
 
-import jakarta.validation.constraints.NotBlank;
+import java.util.ArrayList;
+
+
+import com.quamtech.startupinvestissement.Entity.Action;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -10,10 +14,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 
 public class CreerPortefeuillePayload {
-    @NotBlank(message = "identifiant requis")
-    private String idAction;
-    @NotBlank(message = "solde requis")
-   private String solde;
-   @NotBlank(message = "action réquis")
-   private String actions;
+
+
+    private Double soldeInvestisseur;
+    private ArrayList<Action> actions;
 }

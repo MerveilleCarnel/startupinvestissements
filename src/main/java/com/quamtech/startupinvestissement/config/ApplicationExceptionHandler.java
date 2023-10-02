@@ -9,7 +9,10 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+import com.quamtech.startupinvestissement.exception.ActionNotFoundExeption;
+import com.quamtech.startupinvestissement.exception.DescriptionNotFoundException;
 import com.quamtech.startupinvestissement.exception.InvestisseurNotFoudException;
+import com.quamtech.startupinvestissement.exception.UserNotFoudException;
 
 @RestControllerAdvice
 public class ApplicationExceptionHandler {
@@ -39,5 +42,23 @@ public class ApplicationExceptionHandler {
         return errorMap;
      }
  
-   
+     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(ActionNotFoundExeption.class)
+    public Map<String, String> ValeurNonConforme(ActionNotFoundExeption exception){
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("errorMessage",exception.getMessage());
+        return errorMap;
+     }
+  
+
+ @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    @ExceptionHandler(UserNotFoudException.class)
+    public Map<String, String> ValeurNonConforme(UserNotFoudException exception){
+        Map<String, String> errorMap = new HashMap<>();
+        errorMap.put("errorMessage",exception.getMessage());
+        return errorMap;
+     }
+
+
+
 }

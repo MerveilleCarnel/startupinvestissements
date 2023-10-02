@@ -1,5 +1,6 @@
 package com.quamtech.startupinvestissement.Entity;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 import org.springframework.boot.autoconfigure.domain.EntityScan;
@@ -20,11 +21,12 @@ import lombok.NoArgsConstructor;
 public class Action {
     @Id
     private String id;
-    private Integer prix;
+    private BigDecimal prix;
     private LocalDate dateEmission;
     private String qteDisponible;
     private String nomStartup;
+    private String nomAction;
     private StatutAction statutAction;
     private String idInvestisseur;
-
+    private String idStartup;
 }

@@ -1,19 +1,28 @@
 package com.quamtech.startupinvestissement.services;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+
 import org.springframework.stereotype.Service;
+
+import com.quamtech.startupinvestissement.Entity.Action;
 import com.quamtech.startupinvestissement.Entity.Investisseur;
 import com.quamtech.startupinvestissement.Entity.Portefeuille;
+
 import com.quamtech.startupinvestissement.enumeration.Sexe;
 import com.quamtech.startupinvestissement.exception.InvestisseurNotFoudException;
+import com.quamtech.startupinvestissement.payloads.in.CreerActionPayload;
 import com.quamtech.startupinvestissement.payloads.in.CreerInvestissseurPayload;
+import com.quamtech.startupinvestissement.payloads.in.CreerPortefeuillePayload;
+import com.quamtech.startupinvestissement.payloads.in.UpdateInvestisseurPayload;
 import com.quamtech.startupinvestissement.repositories.InvestisseurRepository;
 import com.quamtech.startupinvestissement.repositories.PortefeuilleRepository;
 
 import lombok.AllArgsConstructor;
+import lombok.var;
 
 @Service
 @AllArgsConstructor
@@ -28,19 +37,39 @@ public class InvestisseurService{
             .email(creerInvestisseurpayload.getEmail())
             .sexe(Sexe.valueOf(creerInvestisseurpayload.getSexe()))
             .password(creerInvestisseurpayload.getPassword())
+            .fonction(creerInvestisseurpayload.getFonction())
             .build();
+            var creerPortefeuillePayload = new CreerPortefeuillePayload();
+            var port = creerporteFeuille(creerPortefeuillePayload);
+            in.setPortefeuille(port);
+            return investRepository.save(in);
+    }
 
+    public Portefeuille creerporteFeuille(CreerPortefeuillePayload creerPortefeuillePayload){
+        Portefeuille portefeuille = Portefeuille.builder()
+        .actions(creerPortefeuillePayload.getActions())
+        .build();
+        var ok = new BigDecimal(0.0);
+        portefeuille.setSoldeInvestisseur(ok);
+        var creerActionPayload = new CreerActionPayload();
+        var act = creerAction(creerActionPayload);
+        ArrayList<Action> test = new ArrayList<>();
+        test.add(act);
+        portefeuille.setActions(test);
+        return portefeuilleRepository.save(portefeuille);
+    }
 
-Portefeuille portefeuille = new Portefeuille();
-
-portefeuille.getActions();
-portefeuille.getSolde();
-
-portefeuilleRepository.save(portefeuille); 
-
-  in.getPortefeuille();
-    return investRepository.save(in);
-}
+    public Action creerAction(CreerActionPayload creerActionPayload){
+        Action action = Action.builder()
+        .prix(creerActionPayload.getPrix())
+        .dateEmission(LocalDate.now())
+        .nomStartup(creerActionPayload.getNomStartup())
+        .statutAction(creerActionPayload.getStatutAction())
+        .qteDisponible(creerActionPayload.getQteDisponible())
+        .idInvestisseur(creerActionPayload.getIdIvestisseur())
+        .build();
+        return action;
+    }
 
 /*public InvestisseurService( InvestisseurRepository investRepository, PortefeuilleRepository portefeuilleRepository) {
 
@@ -58,13 +87,14 @@ portefeuilleRepository.save(portefeuille);
         return investRepository.findById(id).get();
     }
 
-    public Investisseur updateInvestisseur(CreerInvestissseurPayload creerInvestissseurPayload) throws InvestisseurNotFoudException{
-        if (isInvestisseurExistById(creerInvestissseurPayload.getIdInvestisseur())) {
-            Investisseur i =  investRepository.findById(creerInvestissseurPayload.getIdInvestisseur()).get();
-            i.setNom(creerInvestissseurPayload.getNom());
-            i.setPrenom(creerInvestissseurPayload.getPrenom());
-            i.setPassword(creerInvestissseurPayload.getPassword());
-            i.setEmail(creerInvestissseurPayload.getEmail());
+    public Investisseur updateInvestisseur(UpdateInvestisseurPayload updateInvestisseurPayload) throws InvestisseurNotFoudException{
+        if (isInvestisseurExistById(updateInvestisseurPayload.getIdInvestisseur())) {
+            var i =  investRepository.findById(updateInvestisseurPayload.getIdInvestisseur()).get();
+            i.setNom(updateInvestisseurPayload.getNom());
+            i.setPrenom(updateInvestisseurPayload.getPrenom());
+            i.setPassword(updateInvestisseurPayload.getPassword());
+            i.setEmail(updateInvestisseurPayload.getEmail());
+            
             return investRepository.save(i);
         } else {
             throw new InvestisseurNotFoudException("Aucun investisseur ne correspond à cet id");
@@ -88,12 +118,8 @@ portefeuilleRepository.save(portefeuille);
         }
     }
 
-    public Page<Investisseur> getAllInvestisseur(Pageable pageable){
-        return investRepository.findAll(pageable);
-    }
-
-    public List<Investisseur> getAllInvestisseur() {
-        return null;
+    public List<Investisseur> getAllInvestisseur(){
+        return investRepository.findAll();
     }
 }
 

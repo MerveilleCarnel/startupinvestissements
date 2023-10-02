@@ -4,6 +4,7 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.DBRef;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+
 import com.quamtech.startupinvestissement.enumeration.Sexe;
 
 import lombok.AllArgsConstructor;
@@ -14,10 +15,8 @@ import lombok.NoArgsConstructor;
 @Document
 @Data
 @AllArgsConstructor
-@Builder
+@Builder 
 @NoArgsConstructor
-
-
 public class Investisseur {
     @Id
     private String id;
@@ -27,6 +26,7 @@ public class Investisseur {
     private Sexe sexe ;
     private String email;
     private Integer tel;
+    private String fonction;
 
 @DBRef        /*specifie que chaque investisseur a un seul portefeuille. lorsqu'un investisseur est crée un portefeuille sera automatiquement 
 crée et lié à cet investisseur grace a cet annotation*/

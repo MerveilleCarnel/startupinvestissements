@@ -9,6 +9,7 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 import com.quamtech.startupinvestissement.Entity.Investisseur;
 
+
 public interface InvestisseurRepository  extends MongoRepository<Investisseur,String>{
     public Optional<Investisseur> findById(String id);
     public Page<Investisseur> findAll(Pageable pageable);
